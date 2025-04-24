@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Carrinho - Meu E-commerce</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        a, button {
+            color: #007bff;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        a:hover, button:hover {
+            text-decoration: underline;
+        }
+        button.submit {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+        }
+        button.submit:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>Carrinho de Compras</h1>
+<p><a href="/logout">Sair</a></p>
+<table>
+    <thead>
+    <tr>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th>Preço (R$)</th>
+        <th>Quantidade</th>
+        <th>Ação</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${carrinho.itens}">
+        <td th:text="${item.produto.nome}"></td>
+        <td th:text="${item.produto.descricao}"></td>
+        <td th:text="${item.produto.preco}"></td>
+        <td th:text="${item.quantidade}"></td>
+        <td>
+            <a th:href="@{/carrinho/remover(id=${item.produto.id})}">Remover</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p>Total: <span th:text="${carrinho.total}"></span> R$</p>
+<form method="post" th:action="@{/carrinho/finalizar}">
+    <button type="submit" class="submit">Finalizar Compra</button>
+</form>
+<p><a href="/produtos">Voltar aos Produtos</a></p>
+</body>
+</html>
