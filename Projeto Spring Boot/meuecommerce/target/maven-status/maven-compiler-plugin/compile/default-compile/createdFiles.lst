@@ -1,0 +1,15 @@
+com\meuecommerce\util\DatabaseConnection.class
+com\meuecommerce\controller\CarrinhoController.class
+com\meuecommerce\controller\AuthController.class
+com\meuecommerce\model\Cliente.class
+com\meuecommerce\model\Produto.class
+com\meuecommerce\controller\LojistaController.class
+com\meuecommerce\controller\ListaProdutosController.class
+com\meuecommerce\dao\LojistaDAO.class
+com\meuecommerce\model\CarrinhoItem.class
+com\meuecommerce\model\Carrinho.class
+com\meuecommerce\dao\ClienteDAO.class
+com\meuecommerce\MeuecommerceApplication.class
+com\meuecommerce\model\Lojista.class
+com\meuecommerce\controller\VerCarrinhoController.class
+com\meuecommerce\dao\ProdutoDAO.class

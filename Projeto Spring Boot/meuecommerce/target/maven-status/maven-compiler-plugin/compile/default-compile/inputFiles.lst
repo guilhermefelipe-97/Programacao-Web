@@ -1,0 +1,15 @@
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\controller\AuthController.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\controller\CarrinhoController.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\controller\ListaProdutosController.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\controller\LojistaController.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\controller\VerCarrinhoController.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\dao\ClienteDAO.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\dao\LojistaDAO.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\dao\ProdutoDAO.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\MeuecommerceApplication.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\model\Carrinho.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\model\CarrinhoItem.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\model\Cliente.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\model\Lojista.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\model\Produto.java
+C:\Gui\Programação\Programacao-Web\meuecommerce\src\main\java\com\meuecommerce\util\DatabaseConnection.java

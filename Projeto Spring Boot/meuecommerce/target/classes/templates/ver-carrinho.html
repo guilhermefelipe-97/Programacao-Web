@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Carrinho de Compras</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">Carrinho de Compras</h2>
+        <div class="space-x-4">
+            <span th:if="${session.user != null}" th:text="'Olá, ' + ${session.user.nome}" class="text-gray-700"></span>
+            <a th:href="@{/produtos}" class="text-indigo-600 hover:underline">Continuar Comprando</a>
+            <a th:if="${session.userType == 'storeOwner'}" th:href="@{/lojista/produtos}" class="text-indigo-600 hover:underline">Gerenciar Produtos</a>
+            <a th:href="@{/logout}" class="text-red-600 hover:underline">Sair</a>
+        </div>
+    </div>
+    <div th:if="${error != null or param.error != null}" class="bg-red-100 text-red-700 p-4 rounded mb-4">
+        <p th:if="${error != null}" th:text="${error}"></p>
+        <p th:if="${param.error != null and error == null}" th:text="${param.error[0]}"></p>
+    </div>
+    <div th:if="${success != null or param.success != null}" class="bg-green-100 text-green-700 p-4 rounded mb-4">
+        <p th:if="${success != null}" th:text="${success}"></p>
+        <p th:if="${param.success != null and success == null}" th:text="${param.success[0]}"></p>
+    </div>
+    <div th:if="${cart == null or cart.items.isEmpty()}">
+        <p class="text-center text-gray-600">Seu carrinho está vazio.</p>
+        <div class="mt-4 text-center">
+            <a th:href="@{/produtos}" class="text-indigo-600 hover:underline">Continuar comprando</a>
+        </div>
+    </div>
+    <div th:if="${cart != null and !cart.items.isEmpty()}">
+        <table class="w-full border-collapse">
+            <thead>
+            <tr class="bg-gray-200">
+                <th class="p-3 text-left">Produto</th>
+                <th class="p-3 text-left">Preço</th>
+                <th class="p-3 text-left">Quantidade</th>
+                <th class="p-3 text-left">Subtotal</th>
+                <th class="p-3 text-left">Ação</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cart.items}" class="border-b">
+                <td class="p-3" th:text="${item.produto.nome}"></td>
+                <td class="p-3" th:text="'R$ ' + ${#numbers.formatDecimal(item.produto.preco, 1, 2)}"></td>
+                <td class="p-3" th:text="${item.quantity}"></td>
+                <td class="p-3" th:text="'R$ ' + ${#numbers.formatDecimal(item.produto.preco * item.quantity, 1, 2)}"></td>
+                <td class="p-3">
+                    <a th:href="@{/carrinho/remove(id=${item.produto.id})}" class="text-red-600 hover:underline">Remover</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="mt-6 flex justify-between items-center">
+            <p class="text-lg font-semibold">
+                Total: <span th:text="'R$ ' + ${#numbers.formatDecimal(cart.total, 1, 2)}"></span>
+            </p>
+            <form action="/finalizar" method="post">
+                <button type="submit" class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">
+                    Finalizar Compra
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
