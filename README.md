@@ -1,6 +1,6 @@
 # 🛍️ Sistema de E-commerce com Spring Boot e MySQL
 
-Este projeto é uma aplicação web de e-commerce desenvolvida com **Spring Boot**, **Spring MVC**, **Spring Data JPA**, **Thymeleaf** e **MySQL**. Ele implementa funcionalidades para clientes (cadastro, login, listagem de produtos, gerenciamento de carrinho e finalização de compras) e lojistas (login, listagem e cadastro de produtos). O carrinho é gerenciado via sessões HTTP com timeout de 20 minutos, e os dados são armazenados em um banco MySQL.
+Este projeto é uma aplicação web de e-commerce desenvolvida com **Spring Boot**, **Spring MVC**, **Thymeleaf** e **MySQL**. Ele implementa funcionalidades para clientes (cadastro, login, listagem de produtos, gerenciamento de carrinho e finalização de compras) e lojistas (login, listagem e cadastro de produtos). O carrinho é gerenciado via sessões HTTP, e os dados são armazenados em um banco MySQL usando JDBC puro.
 
 ## Desenvolvedores
 
@@ -20,11 +20,11 @@ A aplicação atende aos seguintes casos de uso:
   - Login com email e senha.
   - Visualização de produtos cadastrados.
   - Cadastro de novos produtos (nome, descrição, preço e estoque).
-- **Sessão**: O carrinho é mantido em uma sessão HTTP com expiração de 20 minutos.
+- **Sessão**: O carrinho é mantido em uma sessão HTTP.
 
 ## Pré-requisitos
 
-- **Java 17+**: JDK instalado ([Oracle JDK](https://www.oracle.com/java/) ou [OpenJDK](https://adoptium.net/)).
+- **Java 21+**: JDK instalado ([Oracle JDK](https://www.oracle.com/java/) ou [OpenJDK](https://adoptium.net/)).
 - **Maven**: Gerenciador de dependências ([Maven](https://maven.apache.org/download.cgi)).
 - **MySQL**: Servidor MySQL instalado ([MySQL Community Server](https://dev.mysql.com/downloads/)).
 - **IDE**: IntelliJ IDEA Community, VS Code com extensões Java ou outra IDE compatível.
@@ -38,31 +38,34 @@ Siga os passos abaixo para configurar e executar a aplicação localmente.
 1. Certifique-se de que o MySQL está instalado e rodando.
 2. Abra o MySQL Workbench ou use o terminal MySQL:
    ```sql
-   CREATE DATABASE ecommerce;
-   CREATE USER 'ecommerce_user'@'localhost' IDENTIFIED BY 'sua_senha';
-   GRANT ALL PRIVILEGES ON ecommerce.* TO 'ecommerce_user'@'localhost';
+   CREATE DATABASE meuecommerce;
+   CREATE USER 'admin2025'@'localhost' IDENTIFIED BY 'admin2025';
+   GRANT ALL PRIVILEGES ON meuecommerce.* TO 'admin2025'@'localhost';
    FLUSH PRIVILEGES;
    ```
-3. Substitua `'sua_senha'` por uma senha de sua escolha.
+3. As credenciais `admin2025` e senha `admin2025` são usadas por padrão. Você pode alterá-las no `application.properties`.
 
 ### 2. Clonar o Repositório
+1. Clone o repositório para sua máquina local:
+   ```bash
+   git clone <URL_DO_REPOSITORIO>
+   cd meuecommerce
+   ```
 
 ### 3. Configurar o Projeto
 1. Abra o projeto na sua IDE (IntelliJ IDEA, VS Code, etc.).
-2. Edite o arquivo `src/main/resources/application.properties`:
+2. Verifique o arquivo `src/main/resources/application.properties`:
    ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce?useSSL=false&serverTimezone=UTC
-   spring.datasource.username=ecommerce_user
-   spring.datasource.password=sua_senha
+   spring.datasource.url=jdbc:mysql://localhost:3306/meuecommerce?useSSL=false&serverTimezone=UTC
+   spring.datasource.username=admin2025
+   spring.datasource.password=admin2025
    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-   spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
-   spring.jpa.hibernate.ddl-auto=update
-   server.servlet.session.timeout=1200s
    ```
-   - Substitua `ecommerce_user` e `sua_senha` pelas credenciais do MySQL.
+   - Se alterou o usuário ou senha no passo 1, atualize `spring.datasource.username` e `spring.datasource.password`.
+3. O arquivo `data.sql` (em `src/main/resources`) cria as tabelas `cliente`, `lojista`, e `produto` e insere dados iniciais automaticamente ao iniciar a aplicação.
 
 ### 4. Executar a Aplicação
-1. Na IDE, execute a classe `EcommerceApplication.java`.
+1. Na IDE, execute a classe `MeuecommerceApplication.java`.
 2. Ou, no terminal, na pasta do projeto:
    ```bash
    mvn spring-boot:run
@@ -75,9 +78,9 @@ Siga os passos abaixo para configurar e executar a aplicação localmente.
 - Abra o navegador e acesse `http://localhost:8080/login`.
 - **Credenciais de Teste** (definidas em `data.sql`):
   - **Cliente**:
-    - Email: `in20170xol@gmail.com.br`, Senha: `12345jaum`
-    - Email: `amarasehol@outlook.com.br`, Senha: `amara82`
-    - Email: `mariape@terra.com,br`, Senha: `145aektm`
+    - Email: `joao.pedro@example.com`, Senha: `12345jaum`
+    - Email: `amara.silva@example.com`, Senha: `amara82`
+    - Email: `maria.pereira@terra.com.br`, Senha: `145aektm`
   - **Lojista**:
     - Email: `tanirocr@email.com`, Senha: `123456abc`
     - Email: `lore_sil@yahoo.com.br`, Senha: `12uhuuu@`
@@ -98,10 +101,10 @@ Siga os passos abaixo para configurar e executar a aplicação localmente.
 ### Verificar o Banco
 - Use o MySQL Workbench ou terminal para consultar as tabelas:
   ```sql
-  USE ecommerce;
-  SELECT * FROM client;
-  SELECT * FROM store_owner;
-  SELECT * FROM product;
+  USE meuecommerce;
+  SELECT * FROM cliente;
+  SELECT * FROM lojista;
+  SELECT * FROM produto;
   ```
 
 ## Estrutura do Projeto
@@ -111,15 +114,15 @@ meuecommerce/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/meuecommerce/
-│   │   │   ├── model/                         # Entidades
-│   │   │   ├── repository/                    # Repositórios JPA
-│   │   │   ├── controller/                    # Controladores
-│   │   │   ├── session/                       # Carrinho da Sessão
+│   │   │   ├── controller/                    # Controladores (AuthController, CarrinhoController, etc.)
+│   │   │   ├── dao/                           # Classes DAO para acesso ao banco via JDBC
+│   │   │   ├── model/                         # Modelos (Cliente, Lojista, Produto, Carrinho, etc.)
+│   │   │   ├── util/                          # Utilitários (DatabaseConnection)
 │   │   │   └── MeuecommerceApplication.java   # Classe principal
 │   │   ├── resources/
 │   │   │   ├── templates/                     # Templates Thymeleaf (login.html, lista-produtos.html, etc.)
 │   │   │   ├── application.properties         # Configurações do projeto
-│   │   │   └── data.sql                       # Dados iniciais para o banco
+│   │   │   └── data.sql                       # Schema e dados iniciais para o banco
 │   └── test/                                  # Testes (não implementados neste projeto)
 ├── pom.xml                                    # Dependências Maven
 └── README.md                                  # Documentação
@@ -127,7 +130,7 @@ meuecommerce/
 
 ## Tecnologias Utilizadas
 - **Spring Boot 3.4.4**: Framework principal.
-- **Spring Data JPA**: Persistência de dados.
+- **JDBC**: Persistência de dados com MySQL.
 - **MySQL**: Banco de dados relacional.
 - **Thymeleaf**: Renderização de páginas HTML.
 - **Maven**: Gerenciamento de dependências.
