@@ -1,6 +1,6 @@
 # 🛍️ Sistema de E-commerce com Spring Boot e MySQL
 
-Este projeto é uma aplicação web de e-commerce desenvolvida com **Spring Boot**, **Spring MVC**, **Thymeleaf** e **MySQL**. Ele implementa funcionalidades para clientes (cadastro, login, listagem de produtos, gerenciamento de carrinho e finalização de compras) e lojistas (login, listagem e cadastro de produtos). O carrinho é gerenciado via sessões HTTP, e os dados são armazenados em um banco MySQL usando JDBC puro.
+Este projeto é uma aplicação web de e-commerce desenvolvida com **Spring Boot** e **MySQL**. Ele implementa funcionalidades para clientes (cadastro, login, listagem de produtos, gerenciamento de carrinho e finalização de compras) e lojistas (login, listagem e cadastro de produtos). O HTML é gerado diretamente nos controladores, o carrinho é gerenciado via sessões HTTP, e os dados são armazenados em um banco MySQL usando **JDBC puro** com consultas SQL manuais.
 
 ## Desenvolvedores
 
@@ -60,6 +60,7 @@ Siga os passos abaixo para configurar e executar a aplicação localmente.
    spring.datasource.username=admin2025
    spring.datasource.password=admin2025
    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+   spring.sql.init.mode=always
    ```
    - Se alterou o usuário ou senha no passo 1, atualize `spring.datasource.username` e `spring.datasource.password`.
 3. O arquivo `data.sql` (em `src/main/resources`) cria as tabelas `cliente`, `lojista`, e `produto` e insere dados iniciais automaticamente ao iniciar a aplicação.
@@ -68,7 +69,7 @@ Siga os passos abaixo para configurar e executar a aplicação localmente.
 1. Na IDE, execute a classe `MeuecommerceApplication.java`.
 2. Ou, no terminal, na pasta do projeto:
    ```bash
-   mvn spring-boot:run
+   mvn clean spring-boot:run
    ```
 3. A aplicação estará disponível em `http://localhost:8080/login`.
 
@@ -91,12 +92,13 @@ Siga os passos abaixo para configurar e executar a aplicação localmente.
   - Faça login em `/login`.
   - Liste produtos em `/produtos`.
   - Adicione produtos ao carrinho e visualize em `/carrinho`.
-  - Finalize a compra, atualizando o estoque.
+  - Finalize a compra em `/finalizar`, atualizando o estoque.
 - **Lojistas**:
   - Faça login em `/login`.
   - Liste produtos em `/lojista/produtos`.
   - Cadastre novos produtos em `/lojista/cadastro`.
-- **Logout**: Disponível em todas as páginas.
+- **Logout**: Disponível em `/logout`.
+- **Erro**: URLs inválidas redirecionam para `/error`.
 
 ### Verificar o Banco
 - Use o MySQL Workbench ou terminal para consultar as tabelas:
@@ -114,24 +116,63 @@ meuecommerce/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/meuecommerce/
-│   │   │   ├── controller/                    # Controladores (AuthController, CarrinhoController, etc.)
-│   │   │   ├── dao/                           # Classes DAO para acesso ao banco via JDBC
-│   │   │   ├── model/                         # Modelos (Cliente, Lojista, Produto, Carrinho, etc.)
+│   │   │   ├── controller/                    # Controladores Spring MVC (LoginController, CadastroController, etc.)
+│   │   │   ├── dao/                           # Classes DAO para acesso ao banco via JDBC (ClienteDAO, ProdutoDAO, etc.)
+│   │   │   ├── model/                         # Modelos (Cliente, Lojista, Produto, Carrinho, ItemCarrinho)
 │   │   │   ├── util/                          # Utilitários (DatabaseConnection)
 │   │   │   └── MeuecommerceApplication.java   # Classe principal
 │   │   ├── resources/
-│   │   │   ├── templates/                     # Templates Thymeleaf (login.html, lista-produtos.html, etc.)
 │   │   │   ├── application.properties         # Configurações do projeto
 │   │   │   └── data.sql                       # Schema e dados iniciais para o banco
-│   └── test/                                  # Testes (não implementados neste projeto)
+│   └── test/                                  # Testes (MeuecommerceApplicationTests.java, opcional)
 ├── pom.xml                                    # Dependências Maven
 └── README.md                                  # Documentação
 ```
 
 ## Tecnologias Utilizadas
 - **Spring Boot 3.4.4**: Framework principal.
-- **JDBC**: Persistência de dados com MySQL.
+- **Spring MVC**: Gerenciamento de requisições HTTP com controladores.
+- **JDBC**: Persistência de dados com MySQL, usando consultas SQL manuais.
 - **MySQL**: Banco de dados relacional.
-- **Thymeleaf**: Renderização de páginas HTML.
 - **Maven**: Gerenciamento de dependências.
 - **Java 21**: Linguagem utilizada.
+- **Tailwind CSS**: Estilização das páginas HTML (via CDN).
+
+## Configuração Avançada (Opcional)
+
+### Personalizar Credenciais do Banco
+- Edite `application.properties` para usar outro usuário ou senha:
+  ```properties
+  spring.datasource.username=seu_usuario
+  spring.datasource.password=sua_senha
+  ```
+- Atualize o MySQL:
+  ```sql
+  CREATE USER 'seu_usuario'@'localhost' IDENTIFIED BY 'sua_senha';
+  GRANT ALL PRIVILEGES ON meuecommerce.* TO 'seu_usuario'@'localhost';
+  FLUSH PRIVILEGES;
+  ```
+
+### Ignorar Testes
+- Se não deseja compilar/executar testes:
+  ```bash
+  mvn clean spring-boot:run -DskipTests
+  ```
+- Ou remova o arquivo de teste:
+  ```bash
+  rm src/test/java/com/meuecommerce/MeuecommerceApplicationTests.java  # Linux/Mac
+  del src\test\java\com\meuecommerce\MeuecommerceApplicationTests.java  # Windows
+  ```
+
+### Depuração
+- Para ver logs detalhados:
+  ```bash
+  mvn spring-boot:run -X
+  ```
+- Verifique mapeamentos de URLs nos logs (ex.: `Mapped "/login" onto ...`).
+
+## Notas
+- O HTML é gerado diretamente nos controladores usando `PrintWriter`, sem dependência de Thymeleaf.
+- As consultas SQL são escritas manualmente nas classes DAO, sem uso de JPA ou Spring Data.
+- O carrinho é gerenciado via sessões HTTP, sem persistência no banco.
+- A aplicação usa Tailwind CSS (via CDN) para estilização dinâmica das páginas.
