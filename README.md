@@ -116,7 +116,7 @@ meuecommerce/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/meuecommerce/
-│   │   │   ├── controller/                    # Controladores Spring MVC (LoginController, CadastroController, etc.)
+│   │   │   ├── controller/                    # Controladores Spring (LoginController, CadastroController, etc.)
 │   │   │   ├── dao/                           # Classes DAO para acesso ao banco via JDBC (ClienteDAO, ProdutoDAO, etc.)
 │   │   │   ├── model/                         # Modelos (Cliente, Lojista, Produto, Carrinho, ItemCarrinho)
 │   │   │   ├── util/                          # Utilitários (DatabaseConnection)
@@ -131,7 +131,6 @@ meuecommerce/
 
 ## Tecnologias Utilizadas
 - **Spring Boot 3.4.4**: Framework principal.
-- **Spring MVC**: Gerenciamento de requisições HTTP com controladores.
 - **JDBC**: Persistência de dados com MySQL, usando consultas SQL manuais.
 - **MySQL**: Banco de dados relacional.
 - **Maven**: Gerenciamento de dependências.
