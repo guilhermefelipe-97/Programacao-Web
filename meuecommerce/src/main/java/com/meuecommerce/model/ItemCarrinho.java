@@ -2,11 +2,11 @@ package com.meuecommerce.model;
 
 public class ItemCarrinho {
     private Produto produto;
-    private int quantidade;
+    private int quantity;
 
-    public ItemCarrinho(Produto produto, int quantidade) {
+    public ItemCarrinho(Produto produto, int quantity) {
         this.produto = produto;
-        this.quantidade = quantidade;
+        this.quantity = quantity;
     }
 
     public Produto getProduto() {
@@ -17,11 +17,11 @@ public class ItemCarrinho {
         this.produto = produto;
     }
 
-    public int getQuantidade() {
-        return quantidade;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

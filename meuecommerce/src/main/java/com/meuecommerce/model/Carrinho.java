@@ -4,31 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Carrinho {
-    private List<ItemCarrinho> itens = new ArrayList<>();
+    private List<ItemCarrinho> items = new ArrayList<>();
 
-    public void adicionarProduto(Produto produto) {
-        for (ItemCarrinho item : itens) {
+    public void addProduct(Produto produto) {
+        for (ItemCarrinho item : items) {
             if (item.getProduto().getId().equals(produto.getId())) {
-                item.setQuantidade(item.getQuantidade() + 1);
+                item.setQuantity(item.getQuantity() + 1);
                 return;
             }
         }
-        itens.add(new ItemCarrinho(produto, 1));
+        items.add(new ItemCarrinho(produto, 1));
     }
 
-    public void removerProduto(Long produtoId) {
-        itens.removeIf(item -> item.getProduto().getId().equals(produtoId));
+    public void removeProduct(Long productId) {
+        items.removeIf(item -> item.getProduto().getId().equals(productId));
     }
 
-    public List<ItemCarrinho> getItens() {
-        return itens;
+    public List<ItemCarrinho> getItems() {
+        return items;
     }
 
-    public void setItens(List<ItemCarrinho> itens) {
-        this.itens = itens;
+    public void setItems(List<ItemCarrinho> items) {
+        this.items = items;
     }
 
     public double getTotal() {
-        return itens.stream().mapToDouble(item -> item.getProduto().getPreco() * item.getQuantidade()).sum();
+        return items.stream().mapToDouble(item -> item.getProduto().getPreco() * item.getQuantity()).sum();
     }
 }

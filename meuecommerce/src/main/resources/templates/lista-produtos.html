@@ -1,62 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Produtos - Meu E-commerce</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title>Lista de Produtos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h1>Lista de Produtos</h1>
-<p><a href="/logout">Sair</a></p>
-<table>
-    <thead>
-    <tr>
-        <th>Nome</th>
-        <th>Descrição</th>
-        <th>Preço (R$)</th>
-        <th>Estoque</th>
-        <th>Ação</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="produto : ${produtos}">
-        <td th:text="${produto.nome}"></td>
-        <td th:text="${produto.descricao}"></td>
-        <td th:text="${produto.preco}"></td>
-        <td th:text="${produto.estoque}"></td>
-        <td>
-            <a th:if="${produto.estoque > 0}" th:href="@{/carrinho/adicionar(id=${produto.id})}">Adicionar ao Carrinho</a>
-            <span th:if="${produto.estoque == 0}">Sem estoque</span>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<p><a href="/carrinho">Ver Carrinho</a></p>
+<body class="bg-gray-100 min-h-screen p-6">
+<div class="max-w-5xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">Lista de Produtos</h2>
+        <div class="space-x-4">
+            <a th:href="@{/carrinho}" class="text-indigo-600 hover:underline">Ver Carrinho</a>
+            <a th:if="${session.userType == 'storeOwner'}" th:href="@{/lojista/produtos}" class="text-indigo-600 hover:underline">Gerenciar Produtos</a>
+            <a th:href="@{/logout}" class="text-red-600 hover:underline">Sair</a>
+        </div>
+    </div>
+    <div th:if="${error}" class="bg-red-100 text-red-700 p-4 rounded mb-4">
+        <p th:text="${error}"></p>
+    </div>
+    <div th:if="${success}" class="bg-green-100 text-green-700 p-4 rounded mb-4">
+        <p th:text="${success}"></p>
+    </div>
+    <div th:if="${produtos.isEmpty()}">
+        <p class="text-center text-gray-600">Nenhum produto disponível.</p>
+    </div>
+    <div th:unless="${produtos.isEmpty()}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="produto : ${produtos}" class="bg-gray-50 p-4 rounded-lg shadow">
+            <h3 class="text-lg font-semibold" th:text="${produto.nome}"></h3>
+            <p class="text-gray-600" th:text="${produto.descricao}"></p>
+            <p class="text-indigo-600 font-medium" th:text="'R$ ' + ${#numbers.formatDecimal(produto.preco, 1, 2)}"></p>
+            <p class="text-gray-500" th:text="'Estoque: ' + ${produto.estoque}"></p>
+            <a th:href="@{/carrinho/add(id=${produto.id})}"
+               th:class="${produto.estoque > 0} ? 'mt-2 inline-block bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700' : 'mt-2 inline-block bg-gray-400 text-white py-2 px-4 rounded-md cursor-not-allowed'"
+               th:attr="disabled=${produto.estoque == 0}">
+                Adicionar ao Carrinho
+            </a>
+        </div>
+    </div>
+</div>
 </body>
 </html>
