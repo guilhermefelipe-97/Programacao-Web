@@ -1,25 +1,15 @@
 package com.meuecommerce.util;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Component
 public class DatabaseConnection {
-
-    @Value("${spring.datasource.url}")
-    private String url;
-
-    @Value("${spring.datasource.username}")
-    private String username;
-
-    @Value("${spring.datasource.password}")
-    private String password;
+    private static final String URL = "jdbc:mysql://localhost:3306/meuecommerce?useSSL=false&serverTimezone=UTC";
+    private static final String USERNAME = "admin2025";
+    private static final String PASSWORD = "admin2025";
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
     }
 }

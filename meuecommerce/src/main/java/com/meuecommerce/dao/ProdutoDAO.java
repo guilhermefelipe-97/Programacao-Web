@@ -2,8 +2,6 @@ package com.meuecommerce.dao;
 
 import com.meuecommerce.model.Produto;
 import com.meuecommerce.util.DatabaseConnection;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,19 +10,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class ProdutoDAO {
+    private final DatabaseConnection dbConnection;
 
-    @Autowired
-    private DatabaseConnection dbConnection;
+    public ProdutoDAO() {
+        this.dbConnection = new DatabaseConnection();
+    }
 
-    // Salvar um produto
     public void save(Produto produto) throws SQLException {
-        if (produto.getNome() == null || produto.getNome().trim().isEmpty() ||
-                produto.getDescricao() == null || produto.getDescricao().trim().isEmpty() ||
-                produto.getPreco() <= 0 || produto.getEstoque() < 0) {
-            throw new IllegalArgumentException("Nome, descrição, preço positivo e estoque não-negativo são obrigatórios");
-        }
         String sql = "INSERT INTO produto (nome, descricao, preco, estoque) VALUES (?, ?, ?, ?)";
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -36,46 +29,41 @@ public class ProdutoDAO {
         }
     }
 
-    // Buscar produto por ID
     public Produto findById(Long id) throws SQLException {
         String sql = "SELECT * FROM produto WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    Produto produto = new Produto();
-                    produto.setId(rs.getLong("id"));
-                    produto.setNome(rs.getString("nome"));
-                    produto.setDescricao(rs.getString("descricao"));
-                    produto.setPreco(rs.getDouble("preco"));
-                    produto.setEstoque(rs.getInt("estoque"));
-                    return produto;
-                }
-                return null;
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Produto produto = new Produto();
+                produto.setId(rs.getLong("id"));
+                produto.setNome(rs.getString("nome"));
+                produto.setDescricao(rs.getString("descricao"));
+                produto.setPreco(rs.getDouble("preco"));
+                produto.setEstoque(rs.getInt("estoque"));
+                return produto;
             }
+            return null;
         }
     }
 
-    // Verificar se produto existe por ID
     public boolean existsById(Long id) throws SQLException {
         String sql = "SELECT COUNT(*) FROM produto WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
-                return false;
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
             }
+            return false;
         }
     }
 
-    // Listar todos os produtos
     public List<Produto> findAll() throws SQLException {
-        String sql = "SELECT * FROM produto";
         List<Produto> produtos = new ArrayList<>();
+        String sql = "SELECT * FROM produto";
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -88,11 +76,10 @@ public class ProdutoDAO {
                 produto.setEstoque(rs.getInt("estoque"));
                 produtos.add(produto);
             }
-            return produtos;
         }
+        return produtos;
     }
 
-    // Excluir produto por ID
     public void deleteById(Long id) throws SQLException {
         String sql = "DELETE FROM produto WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -102,18 +89,11 @@ public class ProdutoDAO {
         }
     }
 
-    // Atualizar estoque de um produto
-    public void updateEstoque(Long id, int novoEstoque) throws SQLException {
-        if (!existsById(id)) {
-            throw new IllegalArgumentException("Produto com ID " + id + " não existe");
-        }
-        if (novoEstoque < 0) {
-            throw new IllegalArgumentException("Estoque não pode ser negativo");
-        }
+    public void updateEstoque(Long id, int estoque) throws SQLException {
         String sql = "UPDATE produto SET estoque = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, novoEstoque);
+            stmt.setInt(1, estoque);
             stmt.setLong(2, id);
             stmt.executeUpdate();
         }
