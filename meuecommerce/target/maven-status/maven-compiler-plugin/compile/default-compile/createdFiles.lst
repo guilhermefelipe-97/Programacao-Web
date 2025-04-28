@@ -16,3 +16,4 @@ com\meuecommerce\model\Lojista.class
 com\meuecommerce\controller\CadastroController.class
 com\meuecommerce\controller\CadastroProdutoController.class
 com\meuecommerce\dao\ProdutoDAO.class
+com\meuecommerce\util\TestConnection.class
