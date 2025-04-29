@@ -36,6 +36,24 @@ public class ProdutosController {
         out.println("<head>");
         out.println("<title>Lista de Produtos</title>");
         out.println("<script src='https://cdn.tailwindcss.com'></script>");
+        out.println("<style>");
+        out.println(".tooltip { position: absolute; z-index: 10; }");
+        out.println("</style>");
+        out.println("<script>");
+        out.println("function showLink(element, link) {");
+        out.println("  var tooltip = document.getElementById('tooltip');");
+        out.println("  tooltip.innerText = link;"); // Alterado para innerText, exibindo apenas texto
+        out.println("  tooltip.className = 'tooltip bg-white border border-gray-300 p-2 rounded shadow-md text-sm text-gray-700';");
+        out.println("  tooltip.style.display = 'block';");
+        out.println("  var rect = element.getBoundingClientRect();");
+        out.println("  tooltip.style.left = (rect.left + window.scrollX + 10) + 'px';");
+        out.println("  tooltip.style.top = (rect.bottom + window.scrollY + 5) + 'px';");
+        out.println("}");
+        out.println("function hideLink() {");
+        out.println("  var tooltip = document.getElementById('tooltip');");
+        out.println("  tooltip.style.display = 'none';");
+        out.println("}");
+        out.println("</script>");
         out.println("</head>");
         out.println("<body class='bg-gray-100 min-h-screen p-6'>");
         out.println("<div class='max-w-5xl mx-auto bg-white p-8 rounded-lg shadow-md'>");
@@ -68,9 +86,10 @@ public class ProdutosController {
                     out.println("<p class='text-gray-600'>" + produto.getDescricao() + "</p>");
                     out.println("<p class='text-indigo-600 font-medium'>R$ " + String.format("%.2f", produto.getPreco()) + "</p>");
                     out.println("<p class='text-gray-500'>Estoque: " + produto.getEstoque() + "</p>");
+                    String fullLink = "http://localhost:8080/carrinho/add?id=" + produto.getId(); // Link com domínio completo
                     String linkClass = produto.getEstoque() > 0 ? "mt-2 inline-block bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700" : "mt-2 inline-block bg-gray-400 text-white py-2 px-4 rounded-md cursor-not-allowed";
                     String disabled = produto.getEstoque() > 0 ? "" : "disabled";
-                    out.println("<a href='/carrinho/add?id=" + produto.getId() + "' class='" + linkClass + "' " + disabled + ">Adicionar ao Carrinho</a>");
+                    out.println("<a href='/carrinho/add?id=" + produto.getId() + "' class='" + linkClass + "' " + disabled + " onmouseover=\"showLink(this, '" + fullLink + "')\" onmouseout=\"hideLink()\">Adicionar ao Carrinho</a>");
                     out.println("</div>");
                 }
                 out.println("</div>");
@@ -79,6 +98,7 @@ public class ProdutosController {
             out.println("<div class='bg-red-100 text-red-700 p-4 rounded mb-4'>Erro ao listar produtos</div>");
         }
 
+        out.println("<div id='tooltip' class='tooltip hidden'></div>");
         out.println("</div>");
         out.println("</body>");
         out.println("</html>");
